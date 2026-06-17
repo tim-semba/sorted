@@ -45,11 +45,12 @@ module Sorted
     end
 
     def to_sql(quoter = ->(frag) { frag })
-      array.map do |field, dir|
+      sentence = array.map do |field, dir|
         next @customlist["#{field} #{dir}"] if @customlist["#{field} #{dir}"]
         column = field.split('.').map(&quoter).join('.')
         "#{column} #{dir.upcase}"
       end.join(', ')
+      Arel.sql(sentence)
     end
 
     def to_s
